@@ -1,0 +1,16 @@
+{
+    "menu": {
+        "window": {"title": "Main Menu", "width": 400, "height": 600,
+                   "background": "green", "x_min": 0, "y_min": 0},
+        "button_style": {"fill": "lightgray", "text_size": 14},
+        "buttons": [
+            {"id": "1",     "shape": "diamond", "label": "1",     "center": [130, 450], "width": 100, "heigth": 100},
+            {"id": "2",     "shape": "diamond", "label": "2",     "center": [270, 450], "width": 100, "heigth": 100},
+            {"id": "start", "shape": "diamond", "label": "START", "center": [200, 380], "width": 100, "heigth": 100,
+             "style": {"fill": "red", "text_color": "white"}},
+            {"id": "3",     "shape": "diamond", "label": "3",     "center": [130, 310], "width": 100, "heigth": 100},
+            {"id": "4",     "shape": "diamond", "label": "4",     "center": [270, 310], "width": 100, "heigth": 100},
+            {"id": "quit",  "shape": "rect",    "label": "QUIT",  "center": [200, 200], "width": 120, "heigth": 50}
+        ]
+    }
+}
