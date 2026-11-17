@@ -26,6 +26,7 @@ class Button:
 
         self._refresh()
 
+
     def _corners(self) -> list[Point]:  # this shape is to tell graphics what to draw
         x, y, w, h = self.x, self.y, self.half_w, self.half_h
         if self.settings.shape == "diamond":
@@ -33,6 +34,7 @@ class Button:
         if self.settings.shape == "rect":
             return [Point(x - w, y - h), Point(x + w, y - h), Point(x + w, y + h), Point(x - w, y + h)]
         raise ValueError(f"unknown button shape: {self.settings.shape}")
+
 
     def _refresh(self) -> None:
         """update the style, thisis so that if the button is selected it changes its size or color"""
@@ -48,6 +50,7 @@ class Button:
             self.text.setSize(s.text_size)
         self.shape.setWidth(s.border_width if self.active else s.inactive_border_width)
 
+
     def clicked(self, p: Point | None) -> bool: # this is the math to check if its inside or not
         if not self.active or p is None:
             return False
@@ -57,21 +60,26 @@ class Button:
             return dx / self.half_w + dy / self.half_h <= 1
         return dx <= self.half_w and dy <= self.half_h
 
+
     def activate(self) -> None:
         self.active = True
         self._refresh()
+
 
     def deactivate(self) -> None:
         self.active = False
         self._refresh()
 
+
     def select(self) -> None:
         self.selected = True
         self._refresh()
 
+
     def deselect(self) -> None:
         self.selected = False
         self._refresh()
+
 
     def undraw(self) -> None:
         self.shape.undraw()
