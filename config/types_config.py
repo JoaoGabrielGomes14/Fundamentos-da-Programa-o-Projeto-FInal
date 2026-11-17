@@ -31,7 +31,7 @@ class WindowSettings():
             autoflush=False
         )
         window.setBackground(self.background)
-        window.setCoords(self.y_min,self.x_min,self.y_max,self.x_max)
+        window.setCoords(self.x_min,self.y_min,self.x_max,self.y_max)
         return window
 
     #perguntar se podemos usar method master.geometry do tkinter para mover a janela
