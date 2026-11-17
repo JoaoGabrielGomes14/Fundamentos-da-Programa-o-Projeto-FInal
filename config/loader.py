@@ -19,3 +19,10 @@ def load_scenario(name: str, path: str = "config/config.json") -> Scenario:
         buttons.append(ButtonSettings(**fields, style=style))
 
     return Scenario(title=name, window=window, buttons=tuple(buttons),physics=data.get("physics", {}),)
+
+
+def all_scenarios(path:str = "config/config.json")->tuple[Scenario,...]:
+    with open(path) as f:
+        data = json.load(f)
+    return tuple(data.keys())
+
