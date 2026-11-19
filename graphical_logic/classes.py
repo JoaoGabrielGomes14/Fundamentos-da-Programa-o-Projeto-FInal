@@ -1,5 +1,8 @@
 from graphics import GraphWin, Point, Polygon, Text
 from config.types_config import ButtonSettings, ButtonStyle
+#this is where we define the behavior of things needed. we pass the settings and this is the finished , drawn version of these objects,
+#implement here all needed logic for each thing. for example a button needs to be able to know when was clicked or how to disapear
+
 
 
 class Button:

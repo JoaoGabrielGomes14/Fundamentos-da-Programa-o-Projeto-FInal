@@ -1,6 +1,7 @@
 from graphics import GraphWin
 from dataclasses import dataclass,field
-#save types used throughout the program
+#settings of objects, then passed as atributes to corresponding classes in graphica_logic/classes
+
 
 
 @dataclass(frozen=True,slots=True,kw_only=True)
@@ -36,6 +37,8 @@ class WindowSettings():
         return window
 
     #perguntar se podemos usar method master.geometry do tkinter para mover a janela
+
+    
 @dataclass(frozen=True,slots=True,kw_only=True)
 class ButtonStyle():
     fill: str = "lightgray"
@@ -44,7 +47,7 @@ class ButtonStyle():
     text_color: str = "black"
     text_size: int = 12                
     border_width: int = 2
-    inactive_text_color: str = "darkgray"
+    inactive_text_color: str = "darkgray" #these innactive is because the button will have two diferent appeareaces based on if its the selected 
     inactive_border_width: int = 1
     selected_text_color: str = "red"
     selected_text_size: int = 20
@@ -58,7 +61,7 @@ class ButtonSettings():
     label:str
     width:float
     heigth:float
-    style : ButtonStyle = field(default_factory=ButtonStyle)
+    style : ButtonStyle = field(default_factory=ButtonStyle) #one new instance per button, right now this is not needed because  buttonstyle is immutable but its the safe way
 
 
 @dataclass(frozen=True,slots=True,kw_only=True)
@@ -73,7 +76,7 @@ class Scenario():
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class CharacterSettings():
-    position: tuple[float, float]
+    position: tuple[float, float] #we might need to make it so that it has more complex stuff like an atribute "arms" or "legs" 
     height: float
     color: str = "black"
 
@@ -82,7 +85,7 @@ class CharacterSettings():
 class TargetSettings():
     count: int
     radius: float
-    lifetime: float
-    spawn_area: tuple[float, float, float, float]
+    lifetime: float   #this is so it can despaawn like said in the assignemtn
+    spawn_area: tuple[float, float, float, float] #this is so that the target wont spawn inside in front of the buttons. if we want we might later make a function to calculate this from the buttons in the window , but tottally unncesary , we can do it by hand aswell
     fill: str = "blue"
-    image: str | None = None
+    image: str | None = None #we will probably check for one or the other, it doesnt make a lot of sense to have both in one target, either image or color

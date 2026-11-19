@@ -32,8 +32,8 @@ def run_scenario_main_menu(json_name: str, start_scene: Callable[[str], None]) -
             break
 
         if start.clicked(click):        
-            start_scene(selected)         #if you chose one and then press start clal the function to next scenario like run_scenario_2()
-            continue                    #like in the readme maybe add an orchestrator, maybe not needed
+            start_scene(selected)         #the main menu gets this callable from the orchestrator and uses it. 
+            continue                    
 
         for option_id in OPTION_IDS:
             if buttons[option_id].clicked(click):

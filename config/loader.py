@@ -1,6 +1,10 @@
 from config.types_config import WindowSettings, ButtonSettings,Scenario,ButtonStyle,CharacterSettings,TargetSettings
 import json
-#make a loader, reads from json and outputs objects corresponding to that window, fro example the "main menu" reads and outputs and object with everything
+#loader, reads the json config file and gives ready to use objects.
+#The Scenario object contains all info needed to instanciate all objects of a given scenario(main menu is also a scenario)
+#This does not "create" anything, because graphycs-py will start drawing stufff that gets created
+#Scenario cointains only the information needed to create everything in the form of objects defined in types_config
+#the implementation of classes as well as the phisical behavior is (for now) in graphical_logic/classes ,,, Ex ther button class
 
 
 
@@ -35,6 +39,8 @@ def load_scenario(name: str, path: str = "config/config.json") -> Scenario:
                     character=character, targets=targets)
 
 
+
+#only used for orchestrator to get all existent scenarios
 def all_scenarios(path:str = "config/config.json")->tuple[str,...]:
     with open(path) as f:
         data = json.load(f)

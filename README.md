@@ -17,6 +17,10 @@ Explanation:
 Notes:
 i think we should leave the "pretty graphics" to the end, with this architecture its very very easy and risk free to change graphis so lets just make an MVP and move on.
 
-right now, and probably for a while this will be super fragile in that a single error will wipe everything, we need to chose if we go slow now and then when its finished try our best to break everything or if we go slowly doing it
+right now, and probably for a while this will be super fragile in that a single error will wipe everything,
 
 same applies to logging errors and or state
+
+
+-----
+

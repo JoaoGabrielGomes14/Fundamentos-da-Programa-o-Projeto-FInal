@@ -1,0 +1,1 @@
+#first implement logic in classes for the charachter and the target. there is already the settings.
