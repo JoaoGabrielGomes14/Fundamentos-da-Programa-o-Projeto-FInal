@@ -1,14 +1,14 @@
 ##load scenario and make the main menu logic
-from config.loader import load_scenario
 from typing import Callable
 from graphics import GraphicsError
 from config.loader import load_scenario
 from graphical_logic.classes import Button
 
+
 OPTION_IDS: tuple[str, ...] = ("1", "2", "3", "4")
 
 
-def run_scenario_main_menu(json_name: str, scenes: dict[str, Callable[[], None]]) -> None:
+def run_scenario_main_menu(json_name: str, start_scene: Callable[[str], None]) -> None:
     scenario = load_scenario(json_name)
     window = scenario.window.make_window()
 
@@ -32,7 +32,7 @@ def run_scenario_main_menu(json_name: str, scenes: dict[str, Callable[[], None]]
             break
 
         if start.clicked(click):        
-            scenes[selected]()         #if you chose one and then press start clal the function to next scenario like run_scenario_2()
+            start_scene(selected)         #if you chose one and then press start clal the function to next scenario like run_scenario_2()
             continue                    #like in the readme maybe add an orchestrator, maybe not needed
 
         for option_id in OPTION_IDS:

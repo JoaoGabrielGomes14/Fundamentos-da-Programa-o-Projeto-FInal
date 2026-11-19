@@ -21,10 +21,9 @@ class Orchestrator():
 
 
     def run_scenario(self,scenario:str)->None:
-        try:
-            self.scenes[scenario]()
-        except KeyError:
+        if scenario not in self.scenes:
             raise KeyError("this scenario doesnt exist in the scenes dict provided, must be some problem in the  orchestrator ")
+        self.scenes[scenario]()
             
     
 
