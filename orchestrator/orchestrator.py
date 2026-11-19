@@ -16,9 +16,7 @@ class Orchestrator():
 
         if self.menu != "menu":
             raise ValueError("menu MUST exist in config or everyhting breaks")
-        if len(self.scenarios) - 1 != len(self.scenes):
-            raise ValueError("this doesnt make sense, they must be the same lenght ")
-
+        
 
     def start_orchestrator(self):
         run_scenario_main_menu("menu", self.run_scenario) #again, this bound method is mega unncesessary, but i still think there are good opportunities to implement error handling later

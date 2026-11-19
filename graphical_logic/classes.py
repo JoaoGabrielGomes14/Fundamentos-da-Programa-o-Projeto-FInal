@@ -1,5 +1,6 @@
-from graphics import GraphWin, Point, Polygon, Text
-from config.types_config import ButtonSettings, ButtonStyle
+from graphics import GraphWin, Point, Polygon, Text,Image,Line,Circle
+from config.types_config import ButtonSettings, ButtonStyle,CharacterSettings,TargetSettings
+import random
 #this is where we define the behavior of things needed. we pass the settings and this is the finished , drawn version of these objects,
 #implement here all needed logic for each thing. for example a button needs to be able to know when was clicked or how to disapear
 
@@ -15,7 +16,7 @@ class Button:
 
         self.x: float = settings.center[0]
         self.y: float = settings.center[1]
-        self.half_w: float = settings.width / 2  #we have the center so the witdht/2 gives us the border of the shape. for calculating self.selected
+        self.half_w: float = settings.width / 2  #used to calculate the corners 
         self.half_h: float = settings.heigth / 2
 
         self.shape: Polygon = Polygon(*self._corners()) #this gets drawn by graphics
@@ -87,3 +88,91 @@ class Button:
     def undraw(self) -> None:
         self.shape.undraw()
         self.text.undraw()
+
+
+
+class Character():
+    HEAD_RADIUS: float = 0.12
+    HIP_HEIGHT: float = 0.4
+    SHOULDER_HEIGHT: float = 0.7   #picking a shape of the character, like said in types config we might want to make it custom but for now should do
+    HAND_HEIGHT: float = 0.6
+    LEG_SPREAD: float = 0.2
+    ARM_REACH: float = 0.25
+
+    def __init__(self, win: GraphWin, settings: CharacterSettings) -> None:
+        self.settings: CharacterSettings = settings
+        self.x: float = settings.position[0]
+        self.y: float = settings.position[1]
+        h: float = settings.height
+
+        head_r = h * self.HEAD_RADIUS
+        neck = Point(self.x, self.y + h - 2 * head_r)
+        hip = Point(self.x, self.y + h * self.HIP_HEIGHT)
+        shoulder = Point(self.x, self.y + h * self.SHOULDER_HEIGHT)
+
+        self.parts: list[Circle | Line] = [
+            Circle(Point(self.x, self.y + h - head_r), head_r),
+            Line(neck, hip),
+            Line(hip, Point(self.x - h * self.LEG_SPREAD, self.y)),
+            Line(hip, Point(self.x + h * self.LEG_SPREAD, self.y)),
+            Line(shoulder, Point(*self.hand())),
+            Line(shoulder, Point(self.x - h * self.ARM_REACH, self.y + h * self.HAND_HEIGHT)),
+        ]
+        for part in self.parts:
+            part.setOutline(settings.color)
+            part.setWidth(2)
+            part.draw(win)
+
+    def hand(self) -> tuple[float, float]:
+        h = self.settings.height
+        return self.x + h * self.ARM_REACH, self.y + h * self.HAND_HEIGHT
+
+    def undraw(self) -> None:
+        for part in self.parts:
+            part.undraw()
+
+
+class Target():
+    def __init__(self, win: GraphWin, settings: TargetSettings) -> None:
+        self.win: GraphWin = win
+        self.settings: TargetSettings = settings
+        self.center: Point = Point(0, 0)
+        self.body: Circle | Image | None = None
+        self.visible: bool = False
+        self.timer: float = 0.0
+        self.respawn()
+
+    def respawn(self) -> None:
+        self.hide()
+        x1, y1, x2, y2 = self.settings.spawn_area
+        self.center = Point(random.uniform(x1, x2), random.uniform(y1, y2))
+
+        if self.settings.image is not None:
+            self.body = Image(self.center, self.settings.image)
+        else:
+            self.body = Circle(self.center, self.settings.radius)
+            self.body.setFill(self.settings.fill)
+
+        self.body.draw(self.win)
+        self.visible = True
+        self.timer = 0.0
+
+    def hide(self) -> None:
+        if self.body is not None:
+            self.body.undraw()
+        self.visible = False
+
+    def hit_by(self, x: float, y: float) -> bool:
+        if not self.visible:
+            return False
+        dx = x - self.center.getX()
+        dy = y - self.center.getY()
+        return dx * dx + dy * dy <= self.settings.radius ** 2
+
+    def tick(self, dt: float) -> None:
+        self.timer += dt
+        if self.timer >= self.settings.lifetime:
+            self.respawn()
+
+    def undraw(self) -> None:
+        self.hide()

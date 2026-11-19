@@ -38,7 +38,7 @@ class WindowSettings():
 
     #perguntar se podemos usar method master.geometry do tkinter para mover a janela
 
-    
+
 @dataclass(frozen=True,slots=True,kw_only=True)
 class ButtonStyle():
     fill: str = "lightgray"
@@ -72,7 +72,7 @@ class Scenario():
     physics: dict | None = None  #rules of physics that might be important for the scenario
     character: CharacterSettings | None = None
     targets: TargetSettings | None = None  #for exampple menu will not get these,
-
+    hud: dict = field(default_factory=dict)
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class CharacterSettings():
