@@ -104,6 +104,8 @@ class Character():
         self.x: float = settings.position[0]
         self.y: float = settings.position[1]
         h: float = settings.height
+        self.window = win
+
 
         head_r = h * self.HEAD_RADIUS
         neck = Point(self.x, self.y + h - 2 * head_r)
@@ -118,10 +120,13 @@ class Character():
             Line(shoulder, Point(*self.hand())),
             Line(shoulder, Point(self.x - h * self.ARM_REACH, self.y + h * self.HAND_HEIGHT)),
         ]
+        self.draw()
+
+    def draw(self)->None:
         for part in self.parts:
-            part.setOutline(settings.color)
+            part.setOutline(self.settings.color)
             part.setWidth(2)
-            part.draw(win)
+            part.draw(self.window)
 
     def hand(self) -> tuple[float, float]:
         h = self.settings.height
@@ -130,6 +135,15 @@ class Character():
     def undraw(self) -> None:
         for part in self.parts:
             part.undraw()
+
+
+    def move(self, point: Point) -> None:
+        dx = point.getX() - self.x
+        dy = point.getY() - self.y
+        for part in self.parts:
+            part.move(dx, dy)
+        self.x = point.getX()
+        self.y = point.getY()
 
 
 class Target():
