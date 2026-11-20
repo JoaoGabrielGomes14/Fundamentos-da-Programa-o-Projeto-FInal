@@ -104,7 +104,7 @@ class Character():
         self.x: float = settings.position[0]
         self.y: float = settings.position[1]
         h: float = settings.height
-        self.window = win
+        self.win: GraphWin = win
 
 
         head_r = h * self.HEAD_RADIUS
@@ -126,7 +126,7 @@ class Character():
         for part in self.parts:
             part.setOutline(self.settings.color)
             part.setWidth(2)
-            part.draw(self.window)
+            part.draw(self.win)
 
     def hand(self) -> tuple[float, float]:
         h = self.settings.height
@@ -137,7 +137,7 @@ class Character():
             part.undraw()
 
 
-    def move(self, point: Point) -> None:
+    def move(self,point:Point)->None:
         dx = point.getX() - self.x
         dy = point.getY() - self.y
         for part in self.parts:
@@ -147,9 +147,11 @@ class Character():
 
 
 class Target():
-    def __init__(self, win: GraphWin, settings: TargetSettings) -> None:
+    def __init__(self, win: GraphWin, settings: TargetSettings, path: list[Point] | None = None) -> None:
         self.win: GraphWin = win
         self.settings: TargetSettings = settings
+        self.path: list[Point] | None = path   #None = stays still (scenario 1), a list of points = follows it (scenario 2 and 3)
+        self.index: int = 0
         self.center: Point = Point(0, 0)
         self.body: Circle | Image | None = None
         self.visible: bool = False
@@ -158,18 +160,36 @@ class Target():
 
     def respawn(self) -> None:
         self.hide()
-        x1, y1, x2, y2 = self.settings.spawn_area
-        self.center = Point(random.uniform(x1, x2), random.uniform(y1, y2))
+        if self.path:
+            self.index = 0
+            self.center = self.path[0].clone()
+        else:
+            if self.settings.spawn_area is None:
+                raise ValueError("a target without a path needs a spawn_area in the config")
+            x1, y1, x2, y2 = self.settings.spawn_area
+            self.center = Point(random.uniform(x1, x2), random.uniform(y1, y2))
 
         if self.settings.image is not None:
-            self.body = Image(self.center, self.settings.image)
+            self.body = Image(self.center.clone(), self.settings.image)
         else:
-            self.body = Circle(self.center, self.settings.radius)
+            self.body = Circle(self.center.clone(), self.settings.radius)
             self.body.setFill(self.settings.fill)
 
         self.body.draw(self.win)
         self.visible = True
         self.timer = 0.0
+
+    def set_path(self, path: list[Point] | None) -> None:
+        self.path = path
+        self.respawn()
+
+    def step(self) -> None:
+        if not self.path or self.body is None:
+            return
+        self.index = (self.index + self.settings.speed) % len(self.path)
+        new = self.path[self.index]
+        self.body.move(new.getX() - self.center.getX(), new.getY() - self.center.getY())
+        self.center = new.clone()
 
     def hide(self) -> None:
         if self.body is not None:
@@ -184,6 +204,8 @@ class Target():
         return dx * dx + dy * dy <= self.settings.radius ** 2
 
     def tick(self, dt: float) -> None:
+        if self.settings.lifetime is None:
+            return
         self.timer += dt
         if self.timer >= self.settings.lifetime:
             self.respawn()
