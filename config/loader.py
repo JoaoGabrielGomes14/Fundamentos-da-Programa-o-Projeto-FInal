@@ -2,7 +2,7 @@ from config.types_config import WindowSettings, ButtonSettings,Scenario,ButtonSt
 import json
 #loader, reads the json config file and gives ready to use objects.
 #The Scenario object contains all info needed to instanciate all objects of a given scenario(main menu is also a scenario)
-#This does not "create" anything, because graphycs-py will start drawing stufff that gets created
+#This only creates settings (data), never graphics objects, because creating those opens windows and draws
 #Scenario cointains only the information needed to create everything in the form of objects defined in types_config
 #the implementation of classes as well as the phisical behavior is (for now) in graphical_logic/classes ,,, Ex ther button class
 
@@ -31,12 +31,17 @@ def load_scenario(name: str, path: str = "config/config.json") -> Scenario:
     targets = None
     if "targets" in data:
         t = dict(data["targets"])
-        t["spawn_area"] = tuple(t["spawn_area"])
+        if t.get("spawn_area") is not None:
+            t["spawn_area"] = tuple(t["spawn_area"])
         targets = TargetSettings(**t)
+
+    trajectory_area = None
+    if "trajectory_area" in data:
+        trajectory_area = tuple(data["trajectory_area"])
 
     return Scenario(title=name, window=window, buttons=tuple(buttons),
                     physics=data.get("physics", {}), hud=data.get("hud", {}),
-                    character=character, targets=targets)
+                    character=character, targets=targets, trajectory_area=trajectory_area)
 
 
 

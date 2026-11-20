@@ -9,20 +9,20 @@ class WindowSettings():
     width: int
     height: int
     title: str
-    background: str ##we can do like "White" or put the color by hex, i think its the name, like 8d4fa4
+    background: str ##we can do like "White" or put the color by hex, like "#8d4fa4"
     x_min : float
     y_min : float
-    dimension_size_x : float | None = None
-    dimension_size_y : float | None = None
+    world_width : float | None = None   #size in world units, None = same as pixels
+    world_height : float | None = None
 
     @property
     def x_max(self):
-        return self.x_min + (self.dimension_size_x if self.dimension_size_x is not None else self.width)
+        return self.x_min + (self.world_width if self.world_width is not None else self.width)
 
 
     @property
     def y_max(self):
-        return self.y_min + (self.dimension_size_y if self.dimension_size_y is not None else self.height)
+        return self.y_min + (self.world_height if self.world_height is not None else self.height)
     
 
     def make_window(self)->GraphWin:
@@ -38,7 +38,7 @@ class WindowSettings():
 
     #perguntar se podemos usar method master.geometry do tkinter para mover a janela
 
-
+    
 @dataclass(frozen=True,slots=True,kw_only=True)
 class ButtonStyle():
     fill: str = "lightgray"
@@ -47,7 +47,7 @@ class ButtonStyle():
     text_color: str = "black"
     text_size: int = 12                
     border_width: int = 2
-    inactive_text_color: str = "darkgray" #these innactive is because the button will have two diferent appeareaces based on if its the selected 
+    inactive_text_color: str = "darkgray" #a button has three looks: normal, inactive (cant be clicked) and selected (the chosen option)
     inactive_border_width: int = 1
     selected_text_color: str = "red"
     selected_text_size: int = 20
@@ -64,16 +64,6 @@ class ButtonSettings():
     style : ButtonStyle = field(default_factory=ButtonStyle) #one new instance per button, right now this is not needed because  buttonstyle is immutable but its the safe way
 
 
-@dataclass(frozen=True,slots=True,kw_only=True)
-class Scenario():
-    title:str #the name of the scenario
-    window: WindowSettings
-    buttons: tuple[ButtonSettings,...]
-    physics: dict | None = None  #rules of physics that might be important for the scenario
-    character: CharacterSettings | None = None
-    targets: TargetSettings | None = None  #for exampple menu will not get these,
-    hud: dict = field(default_factory=dict)
-
 @dataclass(frozen=True, slots=True, kw_only=True)
 class CharacterSettings():
     position: tuple[float, float] #we might need to make it so that it has more complex stuff like an atribute "arms" or "legs" 
@@ -83,9 +73,22 @@ class CharacterSettings():
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class TargetSettings():
-    count: int
     radius: float
-    lifetime: float   #this is so it can despaawn like said in the assignemtn
-    spawn_area: tuple[float, float, float, float] #this is so that the target wont spawn inside in front of the buttons. if we want we might later make a function to calculate this from the buttons in the window , but tottally unncesary , we can do it by hand aswell
+    count: int = 1
+    lifetime: float | None = None   #this is so it can despaawn like said in the assignemtn, None = never respawns by time (scenario 2)
+    spawn_area: tuple[float, float, float, float] | None = None #where a target without a path can appear, so it wont spawn in front of the buttons or character
+    speed: int = 1   #how many points of the path it moves per frame, only used when it follows a path
     fill: str = "blue"
     image: str | None = None #we will probably check for one or the other, it doesnt make a lot of sense to have both in one target, either image or color
+
+
+@dataclass(frozen=True,slots=True,kw_only=True)
+class Scenario():
+    title:str #the name of the scenario
+    window: WindowSettings
+    buttons: tuple[ButtonSettings,...]
+    physics: dict = field(default_factory=dict)  #rules of physics that might be important for the scenario
+    hud: dict = field(default_factory=dict)
+    character: CharacterSettings | None = None
+    targets: TargetSettings | None = None  #for exampple menu will not get these,
+    trajectory_area: tuple[float, float, float, float] | None = None
