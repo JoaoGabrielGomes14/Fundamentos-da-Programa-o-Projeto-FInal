@@ -15,7 +15,7 @@
     },
     "scenario1": {
         "window": {"title": "Cenario 1", "width": 640, "height": 480, "background": "white",
-                "x_min": -10, "y_min": -10, "dimension_size_x": 220, "dimension_size_y": 165},
+               "x_min": -10, "y_min": -10, "world_width": 220, "world_height": 165},
         "physics": {"fps": 30},
         "hud": {"score_position": [25, 135]},
         "buttons": [
@@ -23,6 +23,20 @@
         ],
         "character": {"position": [-3, 0], "height": 25, "color": "black"},
         "targets": {"count": 2, "radius": 5, "lifetime": 3,
-                "spawn_area": [60, 20, 195, 140], "fill": "blue", "image": null}
+                    "spawn_area": [60, 20, 195, 140], "fill": "blue", "image": null}
+    },
+    "scenario2": {
+        "window": {"title": "Cenario 2", "width": 800, "height": 500, "background": "white",
+                "x_min": 0, "y_min": 0},
+        "physics": {"fps": 30, "number_points": 30},
+        "hud": {"path_color": "orange"},
+        "trajectory_area": [560, 40, 760, 440],
+        "buttons": [
+            {"id": "ring",  "shape": "rect", "label": "Anel",  "center": [70, 460], "width": 100, "heigth": 36},
+            {"id": "eight", "shape": "rect", "label": "Oito",  "center": [70, 415], "width": 100, "heigth": 36},
+            {"id": "free",  "shape": "rect", "label": "Livre", "center": [70, 370], "width": 100, "heigth": 36},
+            {"id": "quit",  "shape": "rect", "label": "QUIT",  "center": [70, 325], "width": 100, "heigth": 36}
+        ],
+        "targets": {"radius": 12, "speed": 1, "fill": "darkblue", "image": null}
     }
 }

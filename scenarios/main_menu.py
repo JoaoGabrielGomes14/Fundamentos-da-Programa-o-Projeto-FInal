@@ -31,7 +31,7 @@ def run_scenario_main_menu(json_name: str, start_scene: Callable[[str], None]) -
         if quit_button.clicked(click):
             break
 
-        if start.clicked(click):        
+        if start.clicked(click) and selected is not None:        
             start_scene(selected)         #the main menu gets this callable from the orchestrator and uses it. 
             continue                    
 
