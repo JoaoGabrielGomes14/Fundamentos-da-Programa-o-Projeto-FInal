@@ -150,7 +150,7 @@ class Target():
     def __init__(self, win: GraphWin, settings: TargetSettings, path: list[Point] | None = None) -> None:
         self.win: GraphWin = win
         self.settings: TargetSettings = settings
-        self.path: list[Point] | None = path   #None = stays still (scenario 1), a list of points = follows it (scenario 2 and 3)
+        self.path: list[Point] | None = path   #None = stays still (scenario 1), a list of points makes it follows the path (scenario 2 and 3)
         self.index: int = 0
         self.center: Point = Point(0, 0)
         self.body: Circle | Image | None = None
@@ -165,7 +165,7 @@ class Target():
             self.center = self.path[0].clone()
         else:
             if self.settings.spawn_area is None:
-                raise ValueError("a target without a path needs a spawn_area in the config")
+                raise ValueError("a target without a path needs a spawn_area in the config so that it doesnt go spawing in bad places")
             x1, y1, x2, y2 = self.settings.spawn_area
             self.center = Point(random.uniform(x1, x2), random.uniform(y1, y2))
 

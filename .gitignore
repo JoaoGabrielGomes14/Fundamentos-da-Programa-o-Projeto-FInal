@@ -1,2 +1,7 @@
+.venv/
+venv/
+env/
 **/__pycache__/
 .mypy_cache/
+.vscode/
+.ruff_cache/
