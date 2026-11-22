@@ -56,6 +56,7 @@ class Button:
 
 
     def clicked(self, p: Point | None) -> bool: # this is the math to check if its inside or not
+        """takes in a point checks to see if its inside the area of the button"""
         if not self.active or p is None:
             return False
         dx = abs(p.getX() - self.x)
@@ -66,6 +67,8 @@ class Button:
 
 
     def activate(self) -> None:
+        """if the button can be pressed or not, used for when it must reach a state before being available,see comment for info"""
+        #this is used in the main menu, not press start unless an option is selected
         self.active = True
         self._refresh()
 
@@ -76,6 +79,7 @@ class Button:
 
 
     def select(self) -> None:
+        """is the "chosen" option,changes look"""
         self.selected = True
         self._refresh()
 
@@ -90,7 +94,7 @@ class Button:
         self.text.undraw()
 
 
-
+#right now this is a drawn stickman, if were gonna use an image then change this
 class Character():
     HEAD_RADIUS: float = 0.12
     HIP_HEIGHT: float = 0.4
@@ -159,6 +163,7 @@ class Target():
         self.respawn()
 
     def respawn(self) -> None:
+        """choses a random spot in spawn area and reapear there"""
         self.hide()
         if self.path:
             self.index = 0
@@ -180,10 +185,12 @@ class Target():
         self.timer = 0.0
 
     def set_path(self, path: list[Point] | None) -> None:
+        """the path the drone is going to take (scenario 2,3)"""
         self.path = path
         self.respawn()
 
     def step(self) -> None:
+        """move to the next point in path"""
         if not self.path or self.body is None:
             return
         self.index = (self.index + self.settings.speed) % len(self.path)
@@ -204,6 +211,7 @@ class Target():
         return dx * dx + dy * dy <= self.settings.radius ** 2
 
     def tick(self, dt: float) -> None:
+        """for the target to disapear, (if it has a limited lifetime)"""
         if self.settings.lifetime is None:
             return
         self.timer += dt

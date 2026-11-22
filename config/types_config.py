@@ -71,6 +71,8 @@ class CharacterSettings():
     color: str = "black"
 
 
+
+#maybe change name, this isnt really a target anymore tbh, its a target in scenario 1 but more like a "drone" in 2 , we could make a different class but this is so simiar(just added a move method and do checks)(not worth doing inhereatance, just extra complexity for no reason (my opinion)for only two as well )
 @dataclass(frozen=True, slots=True, kw_only=True)
 class TargetSettings():
     radius: float

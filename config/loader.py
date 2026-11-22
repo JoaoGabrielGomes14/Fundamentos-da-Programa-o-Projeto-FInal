@@ -9,6 +9,7 @@ import json
 
 
 def load_scenario(name: str, path: str = "config/config.json") -> Scenario:
+    """get scenario settings from config"""
     with open(path) as f:
         data: dict = json.load(f)[name]
 
@@ -47,6 +48,7 @@ def load_scenario(name: str, path: str = "config/config.json") -> Scenario:
 
 #only used for orchestrator to get all existent scenarios
 def all_scenarios(path:str = "config/config.json")->tuple[str,...]:
+    """get names of all scenarios in config"""
     with open(path) as f:
         data = json.load(f)
     return tuple(data.keys())
