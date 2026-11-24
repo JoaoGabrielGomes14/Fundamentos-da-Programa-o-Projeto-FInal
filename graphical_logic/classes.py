@@ -1,6 +1,8 @@
 from graphics import GraphWin, Point, Polygon, Text,Image,Line,Circle
 from config.types_config import ButtonSettings, ButtonStyle,CharacterSettings,TargetSettings
 import random
+from graphical_logic.trajectory_math import line
+import math
 #this is where we define the behavior of things needed. we pass the settings and this is the finished , drawn version of these objects,
 #implement here all needed logic for each thing. for example a button needs to be able to know when was clicked or how to disapear
 
@@ -220,3 +222,39 @@ class Target():
 
     def undraw(self) -> None:
         self.hide()
+
+
+class Ball():
+    def __init__(self, win: GraphWin, settings: BallSettings, start: Point, angle_degrees: float, speed: float) -> None:
+        self.settings: BallSettings = settings
+        self.radius: float = settings.radius
+        self.x: float = start.getX()
+        self.y: float = start.getY()
+        angle = math.radians(angle_degrees)
+        self.velocity_x: float = speed * math.cos(angle)
+        self.velocity_y: float = speed * math.sin(angle)
+
+        self.body: Circle = Circle(Point(self.x, self.y), self.radius)
+        self.body.setFill(settings.color)
+        self.body.draw(win)
+
+    def update(self, frame_time: float, shapes: list["PhysicalBody"]) -> None:
+        """move the ball for one frame, bouncing off the shapes if the config says it collides"""
+        old_x, old_y = self.x, self.y
+        step_time = frame_time / self.settings.substeps
+
+        for _ in range(self.settings.substeps):
+            self.velocity_y -= self.settings.gravity * step_time
+            self.x += self.velocity_x * step_time
+            self.y += self.velocity_y * step_time
+
+            if self.settings.collides:
+                for shape in shapes:
+                    shape.bounce_ball(self)
+
+        self.body.move(self.x - old_x, self.y - old_y)
+
+    def undraw(self) -> None:
+        self.body.undraw()
+
+
